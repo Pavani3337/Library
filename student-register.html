@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Student Registration</h2>
+
+<input id="name" placeholder="Full Name">
+<input id="roll" placeholder="Roll Number">
+
+<select id="branch">
+    <option>CSE</option>
+    <option>ECE</option>
+    <option>EEE</option>
+    <option>MECH</option>
+    <option>CIVIL</option>
+</select>
+
+<input type="file" id="photo" accept="image/*">
+
+<button onclick="register()">Submit</button>
+
+<script>
+function register() {
+
+    const name = document.getElementById("name").value;
+    const roll = document.getElementById("roll").value;
+    const branch = document.getElementById("branch").value;
+    const file = document.getElementById("photo").files[0];
+
+    if (!name || !roll || !file) {
+        alert("Fill all fields");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+
+        students.push({
+            id: Date.now(),
+            name,
+            roll,
+            branch,
+            photo: e.target.result,
+            issuedBooks: []
+        });
+
+        localStorage.setItem("students", JSON.stringify(students));
+
+        alert("Registered Successfully!");
+
+        document.getElementById("name").value = "";
+        document.getElementById("roll").value = "";
+        document.getElementById("photo").value = "";
+
+    };
+
+    reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

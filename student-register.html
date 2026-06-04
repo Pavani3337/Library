@@ -9,6 +9,7 @@
 <h2>Student Registration</h2>
 
 <input id="name" placeholder="Full Name">
+
 <input id="roll" placeholder="Roll Number">
 
 <select id="branch">
@@ -19,73 +20,88 @@
     <option>CIVIL</option>
 </select>
 
-<input type="file" id="photo" accept="image/*">
+<button onclick="register()">
+    Submit
+</button>
 
-<button onclick="register()">Submit</button>
+<script type="module">
 
-<script>
-function register() {
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-    alert("Step 1");
+import {
+    getFirestore,
+    collection,
+    addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const name = document.getElementById("name").value;
-    const roll = document.getElementById("roll").value;
-    const branch = document.getElementById("branch").value;
-    const file = document.getElementById("photo").files[0];
+const firebaseConfig = {
 
-    if (!name || !roll || !file) {
+    apiKey: "AIzaSyBC5TDOKTU3Unr2ogMLmgWNuFMbsVJEa5Q",
+
+    authDomain: "library-580fc.firebaseapp.com",
+
+    projectId: "library-580fc",
+
+    storageBucket: "library-580fc.firebasestorage.app",
+
+    messagingSenderId: "789348069555",
+
+    appId: "1:789348069555:web:092bc0e11d443028a3c0c6",
+
+    measurementId: "G-EMYS59GZ3P"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+window.register = async function() {
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const roll =
+        document.getElementById("roll").value.trim();
+
+    const branch =
+        document.getElementById("branch").value;
+
+    if (!name || !roll) {
+
         alert("Fill all fields");
+
         return;
     }
 
-    alert("Step 2");
-
-    const reader = new FileReader();
-
-reader.onload = function(e) {
-
-    alert("Step 3");
-
     try {
 
-        const students =
-            JSON.parse(localStorage.getItem("students")) || [];
-
-        students.push({
-            id: Date.now(),
-            name,
-            roll,
-            branch,
-            photo: e.target.result,
-            issuedBooks: []
-        });
-
-        alert("Before Save");
-
-        localStorage.setItem(
-            "students",
-            JSON.stringify(students)
+        await addDoc(
+            collection(db, "students"),
+            {
+                name: name,
+                roll: roll,
+                branch: branch,
+                createdAt: new Date()
+            }
         );
 
-        alert("After Save");
-
         alert("Registered Successfully!");
+
+        document.getElementById("name").value = "";
+
+        document.getElementById("roll").value = "";
 
     }
     catch(error) {
 
-        alert("ERROR: " + error.message);
+        alert("Error: " + error.message);
 
     }
+
 };
 
-
-    reader.onerror = function() {
-        alert("File read error");
-    };
-
-    reader.readAsDataURL(file);
-}
 </script>
 
 </body>

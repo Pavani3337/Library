@@ -26,6 +26,8 @@
 <script>
 function register() {
 
+    alert("Step 1");
+
     const name = document.getElementById("name").value;
     const roll = document.getElementById("roll").value;
     const branch = document.getElementById("branch").value;
@@ -36,11 +38,16 @@ function register() {
         return;
     }
 
+    alert("Step 2");
+
     const reader = new FileReader();
 
     reader.onload = function(e) {
 
-        const students = JSON.parse(localStorage.getItem("students")) || [];
+        alert("Step 3");
+
+        const students =
+            JSON.parse(localStorage.getItem("students")) || [];
 
         students.push({
             id: Date.now(),
@@ -54,11 +61,10 @@ function register() {
         localStorage.setItem("students", JSON.stringify(students));
 
         alert("Registered Successfully!");
+    };
 
-        document.getElementById("name").value = "";
-        document.getElementById("roll").value = "";
-        document.getElementById("photo").value = "";
-
+    reader.onerror = function() {
+        alert("File read error");
     };
 
     reader.readAsDataURL(file);

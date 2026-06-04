@@ -42,9 +42,11 @@ function register() {
 
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+reader.onload = function(e) {
 
-        alert("Step 3");
+    alert("Step 3");
+
+    try {
 
         const students =
             JSON.parse(localStorage.getItem("students")) || [];
@@ -58,10 +60,25 @@ function register() {
             issuedBooks: []
         });
 
-        localStorage.setItem("students", JSON.stringify(students));
+        alert("Before Save");
+
+        localStorage.setItem(
+            "students",
+            JSON.stringify(students)
+        );
+
+        alert("After Save");
 
         alert("Registered Successfully!");
-    };
+
+    }
+    catch(error) {
+
+        alert("ERROR: " + error.message);
+
+    }
+};
+
 
     reader.onerror = function() {
         alert("File read error");

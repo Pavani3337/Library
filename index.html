@@ -65,6 +65,10 @@
         id="studentRoll"
         placeholder="Roll Number">
 
+    <input
+        id="studentPhone"
+        placeholder="Phone Number">
+
     <select id="studentBranch">
 
         <option>CSE</option>
@@ -176,6 +180,7 @@
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Roll</th>
+		<th>Phone</th>
 		<th>Delete</th>
             </tr>
 
@@ -202,6 +207,8 @@
     <h3 id="profileName"></h3>
 
     <p id="profileRoll"></p>
+
+    <p id="profilePhone"></p>
 
     <p id="profileBranch"></p>
 
@@ -233,23 +240,28 @@
 
     <div id="issueArea" class="hidden">
 
-        <select id="bookSelect">
+    <input
+        id="bookSearch"
+        placeholder="Search Book Name"
+        onkeyup="searchBooks()">
 
-        </select>
+    <select id="bookSelect">
 
-        <input
-            id="issueDate"
-            type="date">
+    </select>
 
-        <input
-            id="dueDate"
-            type="date">
+    <input
+        id="issueDate"
+        type="date">
 
-        <button onclick="issueBook()">
-            Save
-        </button>
+    <input
+        id="dueDate"
+        type="date">
 
-    </div>
+    <button onclick="issueBook()">
+        Save
+    </button>
+
+</div>
 
 </div>
 

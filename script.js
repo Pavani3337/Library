@@ -14,9 +14,26 @@ function initStorage() {
     }
 }
 
+
 window.onload = function () {
+
     initStorage();
+
+    const isLoggedIn =
+        sessionStorage.getItem("isLoggedIn");
+
+    if (isLoggedIn === "true") {
+
+        document
+            .getElementById("loginPage")
+            .classList.add("hidden");
+
+        document
+            .getElementById("dashboardPage")
+            .classList.remove("hidden");
+    }
 };
+
 
 
 function login() {
@@ -28,9 +45,15 @@ function login() {
         document.getElementById("adminPassword").value;
 
     if (
-        id === ADMIN_ID &&
-        password === ADMIN_PASSWORD
-    ) {
+    id === ADMIN_ID &&
+    password === ADMIN_PASSWORD
+) {
+
+    sessionStorage.setItem(
+        "isLoggedIn",
+        "true"
+    );
+
 
         document
             .getElementById("loginPage")
@@ -51,9 +74,14 @@ function login() {
 
 function logout() {
 
+    sessionStorage.removeItem(
+        "isLoggedIn"
+    );
+
     location.reload();
 
 }
+
 
 function hideSections() {
 
@@ -89,13 +117,16 @@ function registerStudent() {
     const roll =
         document.getElementById("studentRoll").value;
 
+    const phone =
+        document.getElementById("studentPhone").value;
+
     const branch =
         document.getElementById("studentBranch").value;
 
     const file =
         document.getElementById("studentPhoto").files[0];
 
-    if (!name || !roll || !file) {
+    if (!name || !roll || !phone || !file) {
 
         alert("Fill all fields");
         return;
@@ -119,6 +150,8 @@ function registerStudent() {
 
             roll: roll,
 
+	    phone: phone,
+
             branch: branch,
 
             photo: e.target.result,
@@ -136,6 +169,7 @@ function registerStudent() {
 
         document.getElementById("studentName").value = "";
         document.getElementById("studentRoll").value = "";
+	document.getElementById("studentPhone").value = "";
         document.getElementById("studentPhoto").value = "";
 
     };
@@ -262,6 +296,10 @@ function renderStudents(students) {
                 ${student.roll}
             </td>
 
+	    <td onclick="showProfile(${student.id})">
+    	        ${student.phone || "-"}
+            </td>
+
             <td>
                 <button onclick="deleteStudent(${student.id})">
                     Delete
@@ -342,6 +380,12 @@ function showProfile(studentId) {
         currentStudent.roll;
 
     document
+        .getElementById("profilePhone")
+        .innerText =
+        "Phone Number : " +
+        (currentStudent.phone || "-");
+
+    document
         .getElementById("profileBranch")
         .innerText =
         "Branch : " +
@@ -400,7 +444,7 @@ function showIssueBook() {
     const books =
         JSON.parse(
             localStorage.getItem("books")
-        );
+        ) || [];
 
     let options =
         `<option value="">Select Book</option>`;
@@ -419,7 +463,48 @@ function showIssueBook() {
         .getElementById("bookSelect")
         .innerHTML = options;
 
+    document
+        .getElementById("bookSearch")
+        .value = "";
 }
+
+function searchBooks() {
+
+    const searchText =
+        document
+        .getElementById("bookSearch")
+        .value
+        .toLowerCase();
+
+    const books =
+        JSON.parse(
+            localStorage.getItem("books")
+        ) || [];
+
+    let options =
+        `<option value="">Select Book</option>`;
+
+    books.forEach(book => {
+
+        if (
+            book.name &&
+            book.name.toLowerCase().includes(searchText)
+        ) {
+
+            options += `
+            <option value="${book.serial}">
+                ${book.name} - ${book.author}
+            </option>
+            `;
+        }
+    });
+
+    document
+        .getElementById("bookSelect")
+        .innerHTML = options;
+}
+
+
 
 function issueBook() {
 
